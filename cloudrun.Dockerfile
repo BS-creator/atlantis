@@ -28,7 +28,8 @@ RUN apk --no-cache add \
 #RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o atlantis .
 
 
-FROM alpine:3.10
+FROM runatlantis/atlantis:latest
+#FROM runatlantis/atlantis:v0.8.2
 
 ARG CLOUD_SDK_VERSION=253.0.0
 ENV CLOUD_SDK_VERSION=$CLOUD_SDK_VERSION
@@ -36,7 +37,7 @@ ENV PATH /google-cloud-sdk/bin:$PATH
 
 COPY --from=builder /go/src/github.com/runatlantis/atlantis/terraform  /usr/local/bin/terraform
 COPY --from=builder /go/src/github.com/runatlantis/atlantis/terragrunt /usr/local/bin/terragrunt
-COPY --from=builder /go/src/github.com/runatlantis/atlantis/atlantis   /usr/local/bin/atlantis
+#COPY --from=builder /go/src/github.com/runatlantis/atlantis/atlantis   /usr/local/bin/atlantis
 
 RUN apk --no-cache add \
         curl \
@@ -59,7 +60,8 @@ RUN apk --no-cache add \
     && gcloud config set metrics/environment github_docker_image \
     && gcloud --version
 
-COPY cloudrun-docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+#COPY cloudrun-docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["server"]

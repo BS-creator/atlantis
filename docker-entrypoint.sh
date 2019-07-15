@@ -43,4 +43,6 @@ if [[ $(id -u) == 0 ]] && [[ "$1" = 'atlantis' ]]; then
     set -- gosu atlantis "$@"
 fi
 
+export ATLANTIS_PORT="${PORT}"
+
 exec "$@"
